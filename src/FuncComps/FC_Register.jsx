@@ -5,18 +5,15 @@ import SendIcon from "@mui/icons-material/Send";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Autocomplete from '@mui/material/Autocomplete';
-
-
+import Autocomplete from "@mui/material/Autocomplete";
 import ImageIcon from "@mui/icons-material/Image";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import validateForm, { cities } from "../Utils/validateForm";
+
 // Functional component
 const FC_Register = (props) => {
-  // Single state object for form values
-  const cities = ['Tel Aviv', 'Bat Hefer', 'Netanya', 
-                   'Rishon Letzion', 'Hadera','Rehovot'];
   const [userRegister, setUserRegister] = useState({
     username: "",
     email: "",
@@ -30,132 +27,133 @@ const FC_Register = (props) => {
     image: null, // State for the image file
     birthDate: null, // Add birthDate to your state
   });
-  
+
   // State for validation message
   const [validationMessage, setValidationMessage] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
-   if(isSubmitted){
-    const existingUsers = props.users;
-    // Check if the username already exists
-    const isUserExist = existingUsers.find(
-      (existingUser) => existingUser.email === userRegister.email
-    );
+    if (isSubmitted) {
+      const existingUsers = props.users;
+      // Check if the username already exists
+      const isUserExist = existingUsers.find(
+        (existingUser) => existingUser.email === userRegister.email
+      );
 
-    if (isUserExist) {
-      setValidationMessage('User already exists. Please choose a different email.')
-      return;
-    } else {
-      // If validation passes, log or handle the form data here
-      existingUsers.push(userRegister);
-      localStorage.setItem('users', JSON.stringify(existingUsers))
-      alert('User registered successfully.')
-      console.log('User registered:', userRegister)
-      setIsSubmitted(false);
+      if (isUserExist) {
+        setValidationMessage(
+          "User already exists. Please choose a different email."
+        );
+        return;
+      } else {
+        // If validation passes, log or handle the form data here
+        existingUsers.push(userRegister);
+        localStorage.setItem("users", JSON.stringify(existingUsers));
+        alert("User registered successfully.");
+        console.log("User registered:", userRegister);
+        setIsSubmitted(false);
+      }
     }
-   }
-   
-}, [userRegister]);
+  }, [userRegister]);
 
-  const validateForm = (values) => {
-    // username validation
-    const usernameRegex = /^[A-Za-z0-9_.!?-]{6,60}$/;
-    if (!usernameRegex.test(values.username)) {
-      return `Username must be 6-60 characters long and 
-                can only contain English 
-                letters, numbers, and _.!?-`;
-    }
+  // const validateForm = (values) => {
+  //   // username validation
+  //   const usernameRegex = /^[A-Za-z0-9_.!?-]{6,60}$/;
+  //   if (!usernameRegex.test(values.username)) {
+  //     return `Username must be 6-60 characters long and
+  //               can only contain English
+  //               letters, numbers, and _.!?-`;
+  //   }
 
-    // Email validation
-    const emailRegex = /^[A-Za-z0-9_.-]+@[A-Za-z0-9.-]+\.[c][o][m]$/;
-    if (!emailRegex.test(values.email)) {
-      return 'Email must only contain English letters and special signs, have "@" not at the start or end, and end with ".com".';
-    }
+  //   // Email validation
+  //   const emailRegex = /^[A-Za-z0-9_.-]+@[A-Za-z0-9.-]+\.[c][o][m]$/;
+  //   if (!emailRegex.test(values.email)) {
+  //     return 'Email must only contain English letters and special signs, have "@" not at the start or end, and end with ".com".';
+  //   }
 
-    // Password must be 7-12 characters long and include at least one uppercase letter
-    const passwordRegex = /^(?=.*[A-Z]).{7,12}$/;
-    if (!passwordRegex.test(values.password)) {
-      return "Password must be 7-12 characters long and include at least one uppercase letter.";
-    }
+  //   // Password must be 7-12 characters long and include at least one uppercase letter
+  //   const passwordRegex = /^(?=.*[A-Z]).{7,12}$/;
+  //   if (!passwordRegex.test(values.password)) {
+  //     return "Password must be 7-12 characters long and include at least one uppercase letter.";
+  //   }
 
-    // Check if password and confirm password match
-    if (values.password !== values.confirmPassword) {
-      return "Passwords do not match.";
-    }
+  //   // Check if password and confirm password match
+  //   if (values.password !== values.confirmPassword) {
+  //     return "Passwords do not match.";
+  //   }
 
-    // First and Last Name validation
-    const nameRegex = /^[A-Za-z]{2,}$/;
+  //   // First and Last Name validation
+  //   const nameRegex = /^[A-Za-z]{2,}$/;
 
-    if (!nameRegex.test(values.firstName)) {
-      return "First name must only contain at least 2 letters.";
-    }
+  //   if (!nameRegex.test(values.firstName)) {
+  //     return "First name must only contain at least 2 letters.";
+  //   }
 
-    if (!nameRegex.test(values.lastName)) {
-      return "Last name must only contain at least 2 letters.";
-    }
+  //   if (!nameRegex.test(values.lastName)) {
+  //     return "Last name must only contain at least 2 letters.";
+  //   }
 
-    //City name validation
-    if(values.city === ''){
-      return "You should insert city"
-    }
+  //   //City name validation
+  //   if (values.city === "") {
+  //     return "You should insert city";
+  //   }
 
-    //Street name validation
-    const streetRegex = /^[\u05d0-\u05ea\s]{2,}$/;
+  //   //Street name validation
+  //   const streetRegex = /^[\u05d0-\u05ea\s]{2,}$/;
 
-    if (!streetRegex.test(values.street)) {
-      return "Street name should be with hebrew letters.";
-    }
+  //   if (!streetRegex.test(values.street)) {
+  //     return "Street name should be with hebrew letters.";
+  //   }
 
-    // Check if house number is not negative
-    if (values.houseNumber < 0) {
-      return "House number is not valide.";
-    }
+  //   // Check if house number is not negative
+  //   if (values.houseNumber < 0) {
+  //     return "House number is not valide.";
+  //   }
 
-    //image validation{
-    if (values.image) {
-      const imageType = values.image.name.split(".");
-      if (
-        imageType[imageType.length - 1] !== "jpg" &&
-        imageType[imageType.length - 1] !== "jpeg"
-      )
-        return `Image format has to be "jpg" or "jpeg"`;
-    } else values.image = "hw3/src/images/blank-profile-picture.jpg";
+  //   //image validation{
+  //   if (values.image) {
+  //     const imageType = values.image.name.split(".");
+  //     if (
+  //       imageType[imageType.length - 1] !== "jpg" &&
+  //       imageType[imageType.length - 1] !== "jpeg"
+  //     )
+  //       return `Image format has to be "jpg" or "jpeg"`;
+  //   } else values.image = "hw3/src/images/blank-profile-picture.jpg";
 
-    //date birth validation
-    const currentDate = new Date();
-    if (values.birthDate > currentDate) {
-      return "Date of birth cannot be in the future.";
-    }
+  //   //date birth validation
+  //   const currentDate = new Date();
+  //   if (values.birthDate > currentDate) {
+  //     return "Date of birth cannot be in the future.";
+  //   }
 
-    let age = currentDate.getFullYear() - values.birthDate.getFullYear();
+  //   let age = currentDate.getFullYear() - values.birthDate.getFullYear();
 
-    // Check if birthday has occurred this year
-    const birthMonth = values.birthDate.getMonth();
-    const currentMonth = currentDate.getMonth();
-    const birthDay = values.birthDate.getDate();
-    const currentDay = currentDate.getDate();
+  //   // Check if birthday has occurred this year
+  //   const birthMonth = values.birthDate.getMonth();
+  //   const currentMonth = currentDate.getMonth();
+  //   const birthDay = values.birthDate.getDate();
+  //   const currentDay = currentDate.getDate();
 
-    if (
-      currentMonth < birthMonth ||
-      (currentMonth === birthMonth && currentDay < birthDay)
-    ) {
-      age--;
-    }
+  //   if (
+  //     currentMonth < birthMonth ||
+  //     (currentMonth === birthMonth && currentDay < birthDay)
+  //   ) {
+  //     age--;
+  //   }
 
-    // Check if the person is under 18 years old
-    if(!age){
-      return "You should insert your birth date"
-    }else if (age < 18) {
-      return "Person is under 18 years old";
-    } else if (age > 120) {
-      return "person cant be older than 120 age";
-    }
-  };
-  
+  //   // Check if the person is under 18 years old
+  //   if (!age) {
+  //     return "You should insert your birth date";
+  //   } else if (age < 18) {
+  //     return "Person is under 18 years old";
+  //   } else if (age > 120) {
+  //     return "person cant be older than 120 age";
+  //   }
+  // };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    
+
     const formValues = {
       username: event.target.username.value,
       email: event.target.email.value,
@@ -174,10 +172,9 @@ const FC_Register = (props) => {
     if (validationError) {
       setValidationMessage(validationError);
       return; // Stop form submission if validation fails
-    }
-    else{
-     setIsSubmitted(true); 
-     setUserRegister({ ...formValues }); 
+    } else {
+      setIsSubmitted(true);
+      setUserRegister({ ...formValues });
     }
 
     // Reset form fields and validation message
@@ -260,15 +257,15 @@ const FC_Register = (props) => {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-            <Autocomplete
-              disablePortal
-              id="combo-box-demo"
-              options={cities}
-              onChange={(event, newValue) => {
-                setUserRegister({ ...userRegister, city: newValue });
-              }}
-              renderInput={(params) => <TextField {...params} label="City" />}
-            />
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={cities}
+                onChange={(event, newValue) => {
+                  setUserRegister({ ...userRegister, city: newValue });
+                }}
+                renderInput={(params) => <TextField {...params} label="City" />}
+              />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -309,11 +306,7 @@ const FC_Register = (props) => {
                 endIcon={<ImageIcon />}
               >
                 Upload Image
-                <input
-                  type="file"
-                  name="image"
-                  hidden
-                />
+                <input type="file" name="image" hidden />
               </Button>
             </Grid>
           </Grid>
@@ -331,4 +324,5 @@ const FC_Register = (props) => {
   );
 };
 
+export { validateForm };
 export default FC_Register;

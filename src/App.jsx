@@ -3,6 +3,7 @@ import "./App.css";
 import { Grid } from "@mui/material";
 import FC_Register from "./FuncComps/FC_Register";
 import FC_LogIn from "./FuncComps/FC_LogIn";
+import FC_EditDetails from "./FuncComps/FC_EditDetails";
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -24,10 +25,12 @@ function App() {
         <Grid item xs={12} sm={2}>
           <FC_LogIn />
         </Grid>
+        <Grid item xs={12} sm={4}>
+          <FC_EditDetails users={users} />
+        </Grid>
       </Grid>
     </>
   );
-  //ljdnfkdjfbew
 }
 
 export default App;
